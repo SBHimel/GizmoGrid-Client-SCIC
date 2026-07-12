@@ -4,7 +4,8 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaGoogle, FaGithub } from 'react-icons/fa6';
+import { FcGoogle } from 'react-icons/fc'; 
+import { FaFacebook } from 'react-icons/fa6'; // ফেসবুক অফিশিয়াল আইকন ইম্পোর্ট
 import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff, FiUser, FiImage, FiCheck, FiX, FiLoader } from 'react-icons/fi';
 // Better Auth ক্লায়েন্ট ইম্পোর্ট
 import { authClient } from '@/lib/auth-client';
@@ -21,14 +22,14 @@ export default function RegisterPage() {
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
-  // পাসওয়ার্ড ভ্যালিডেশন স্টেটস (লাইভ ট্র্যাকিং)
+  // পাসওয়ার্ড ভ্যালিডেশন স্টেটস (লাইভ ট্র্যাকিং)
   const [passwordRequirements, setPasswordRequirements] = useState({
     length: false,
     number: false,
     capital: false,
   });
 
-  // পাসওয়ার্ড চেঞ্জ হওয়ার সাথে সাথে রুলস চেক করা
+  // পাসওয়ার্ড চেঞ্জ হওয়ার সাথে সাথে রুলস চেক করা
   useEffect(() => {
     setPasswordRequirements({
       length: password.length >= 6,
@@ -37,7 +38,7 @@ export default function RegisterPage() {
     });
   }, [password]);
 
-  // সব রুলস ফিলাপ হয়েছে কি না চেক
+  // সব রুলস ফিলাপ হয়েছে কি না চেক
   const isPasswordValid = Object.values(passwordRequirements).every(Boolean);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -56,7 +57,6 @@ export default function RegisterPage() {
         email,
         password,
         name,
-        // ইউজার ইমেজ ইউআরএল দিলে সেটা যাবে, ফাকা রাখলে Better Auth অটোমেশন বা আমরা পরে হ্যান্ডেল করতে পারব
         image: imageUrl || undefined,
         callbackURL: '/dashboard',
       }, {
@@ -66,7 +66,7 @@ export default function RegisterPage() {
           setSuccessMessage('Identity Created Successfully! Initializing Matrix Dashboard...');
           setTimeout(() => {
             router.push('/dashboard');
-          }, 2000); // ২ সেকেন্ড সাকসেস মেসেজ দেখিয়ে রিডাইরেক্ট করবে
+          }, 2000);
         },
         onError: (ctx) => {
           setIsLoading(false);
@@ -76,6 +76,19 @@ export default function RegisterPage() {
     } catch (err) {
       setIsLoading(false);
       setErrorMessage('Something went wrong during registration.');
+    }
+  };
+
+  // সোশ্যাল সাইন-ইন হ্যান্ডলার লজিক (গুগল ও ফেসবুক)
+  const handleSocialSignIn = async (provider: 'google' | 'facebook') => {
+    try {
+      await authClient.signIn.social({
+        provider: provider,
+        callbackURL: '/dashboard', // সফল হলে ড্যাশবোর্ডে রিডাইরেক্ট করবে
+      });
+    } catch (err) {
+      console.error(err);
+      setErrorMessage(`${provider === 'google' ? 'Google' : 'Facebook'} authentication failed.`);
     }
   };
 
@@ -117,6 +130,38 @@ export default function RegisterPage() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* 🌟 SOCIAL AUTH BUTTONS (GOOGLE & FACEBOOK) */}
+        <div className="flex flex-col gap-2.5 mb-5">
+          {/* Google Button */}
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={() => handleSocialSignIn('google')}
+            className="w-full flex items-center justify-center gap-2.5 bg-slate-50 dark:bg-slate-950 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all active:scale-98 cursor-pointer disabled:opacity-50"
+          >
+            <FcGoogle size={18} />
+            <span>Continue with Google</span>
+          </button>
+
+          {/* Facebook Button */}
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={() => handleSocialSignIn('facebook')}
+            className="w-full flex items-center justify-center gap-2.5 bg-[#1877F2]/10 dark:bg-[#1877F2]/5 hover:bg-[#1877F2]/20 border border-[#1877F2]/30 dark:border-[#1877F2]/20 text-[#1877F2] dark:text-[#4c94ff] py-2.5 rounded-xl text-sm font-bold shadow-sm transition-all active:scale-98 cursor-pointer disabled:opacity-50"
+          >
+            <FaFacebook size={18} />
+            <span>Continue with Facebook</span>
+          </button>
+
+          {/* Divider line */}
+          <div className="relative flex py-2 items-center">
+            <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+            <span className="flex-shrink mx-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Or matrix mail</span>
+            <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
+          </div>
+        </div>
 
         {/* Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -162,7 +207,7 @@ export default function RegisterPage() {
               </button>
             </div>
 
-            {/* পাসওয়ার্ড রুলস ট্র্যাকার UI */}
+            {/* পাসওয়ার্ড রুলস ট্র্যাকার UI */}
             <div className="pt-2 pb-1 space-y-1 text-[11px] font-bold text-slate-500 dark:text-slate-400">
               <div className="flex items-center gap-1.5 transition-colors">
                 {passwordRequirements.length ? <FiCheck className="text-emerald-500 stroke-[3]" /> : <FiX className="text-slate-300 dark:text-slate-700 stroke-[3]" />}
@@ -180,7 +225,7 @@ export default function RegisterPage() {
           </div>
 
           {/* Submit */}
-          <button type="submit" disabled={isLoading} className="group w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white py-3.5 rounded-xl font-bold hover:scale-[1.02] active:scale-98 shadow-md shadow-cyan-600/10 dark:shadow-none transition-all duration-200 cursor-pointer text-sm disabled:opacity-70 disabled:pointer-events-none">
+          <button type="submit" disabled={isLoading} className="group w-full flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-600 hover:to-blue-600 text-white py-3.5 rounded-xl font-bold hover:scale-[1.02] active:scale-98 shadow-md shadow-cyan-600/10 dark:shadow-none transition-all duration-200 cursor-pointer text-sm disabled:opacity-70 disabled:pointer-events-none">
             {isLoading ? <FiLoader size={16} className="animate-spin" /> : (
               <>Initialize Core Identity <FiArrowRight size={16} className="group-hover:translate-x-1 transition-transform" /></>
             )}

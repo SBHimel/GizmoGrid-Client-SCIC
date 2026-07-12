@@ -4,9 +4,9 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'; // লগইন শেষে রিডাইরেক্ট করার জন্য
 import { motion } from 'framer-motion';
-import { FaGoogle, FaGithub } from 'react-icons/fa6';
+import { FaGoogle, FaFacebook } from 'react-icons/fa6'; // 🌟 GitHub সরিয়ে Facebook আইকন আনা হয়েছে
 import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff, FiShield, FiLoader } from 'react-icons/fi';
-// TODO: আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী authClient ইম্পোর্ট করুন
+// TODO: আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী authClient ইম্পোর্ট করুন
 // যেমন: import { authClient } from "@/lib/auth-client";
 import { authClient } from '@/lib/auth-client'; 
 
@@ -18,7 +18,7 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // ইমেইল ও পাসওয়ার্ড দিয়ে লগইন
+  // ইমেইল ও পাসওয়ার্ড দিয়ে লগইন
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -48,8 +48,8 @@ export default function LoginPage() {
     }
   };
 
-  // সোশ্যাল (গুগল/গিথাব) লগইন হ্যান্ডলার
-  const handleSocialSignIn = async (provider: 'google' | 'github') => {
+  // সোশ্যাল (গুগল/ফেসবুক) লগইন হ্যান্ডলার 🌟 (github টাইপ পরিবর্তন করে facebook করা হয়েছে)
+  const handleSocialSignIn = async (provider: 'google' | 'facebook') => {
     try {
       await authClient.signIn.social({
         provider,
@@ -91,7 +91,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Social Authentication Buttons */}
+        {/* Social Authentication Buttons 🌟 */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <button 
             type="button"
@@ -101,13 +101,15 @@ export default function LoginPage() {
             <FaGoogle size={14} className="text-red-500" />
             Google
           </button>
+          
+          {/* 🌟 এখানে ফেসবুক বাটনটি যুক্ত করা হয়েছে */}
           <button 
             type="button"
-            onClick={() => handleSocialSignIn('github')}
+            onClick={() => handleSocialSignIn('facebook')}
             className="flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700/80 text-slate-700 dark:text-slate-300 py-2.5 px-4 rounded-xl font-bold text-xs active:scale-95 transition-all cursor-pointer border border-slate-200/60 dark:border-transparent"
           >
-            <FaGithub size={15} />
-            GitHub
+            <FaFacebook size={15} className="text-blue-600 dark:text-blue-500" />
+            Facebook
           </button>
         </div>
 
