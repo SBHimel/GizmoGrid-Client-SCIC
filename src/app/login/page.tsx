@@ -2,12 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation'; // লগইন শেষে রিডাইরেক্ট করার জন্য
+import { useRouter } from 'next/navigation'; 
 import { motion } from 'framer-motion';
-import { FaGoogle, FaFacebook } from 'react-icons/fa6'; // 🌟 GitHub সরিয়ে Facebook আইকন আনা হয়েছে
-import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff, FiShield, FiLoader } from 'react-icons/fi';
-// TODO: আপনার প্রজেক্টের সঠিক পাথ অনুযায়ী authClient ইম্পোর্ট করুন
-// যেমন: import { authClient } from "@/lib/auth-client";
+import { FaGoogle, FaFacebook } from 'react-icons/fa6'; 
+import { FiMail, FiLock, FiArrowRight, FiEye, FiEyeOff, FiShield, FiLoader, FiTerminal } from 'react-icons/fi';
 import { authClient } from '@/lib/auth-client'; 
 
 export default function LoginPage() {
@@ -18,7 +16,38 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
-  // ইমেইল ও পাসওয়ার্ড দিয়ে লগইন
+  // 🎯 ডেমো অ্যাকাউন্ট অটো-ফিল এবং ডিরেক্ট লগইন ফাংশন
+  const handleDemoLogin = async () => {
+    const demoEmail = 'seller@gizmogrid.com';
+    const demoPassword = 'Password123!';
+    
+    setEmail(demoEmail);
+    setPassword(demoPassword);
+    setIsLoading(true);
+    setErrorMessage('');
+
+    try {
+      await authClient.signIn.email({
+        email: demoEmail,
+        password: demoPassword,
+        callbackURL: '/dashboard',
+      }, {
+        onRequest: () => setIsLoading(true),
+        onSuccess: () => {
+          setIsLoading(false);
+          router.push('/dashboard');
+        },
+        onError: (ctx) => {
+          setIsLoading(false);
+          setErrorMessage(ctx.error.message || 'Demo pipeline access denied.');
+        }
+      });
+    } catch (err) {
+      setIsLoading(false);
+      setErrorMessage('Failed to trigger bypass sequence.');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -28,18 +57,16 @@ export default function LoginPage() {
       await authClient.signIn.email({
         email,
         password,
-        callbackURL: '/dashboard', // লগইন সফল হলে ইউজার যেখানে যাবে
+        callbackURL: '/dashboard',
       }, {
-        onRequest: () => {
-          setIsLoading(true);
-        },
+        onRequest: () => setIsLoading(true),
         onSuccess: () => {
           setIsLoading(false);
-          router.push('/dashboard'); // ড্যাশবোর্ডে রিডাইরেক্ট
+          router.push('/dashboard');
         },
         onError: (ctx) => {
           setIsLoading(false);
-          setErrorMessage(ctx.error.message || 'Authentication failed. Please check your coordinates.');
+          setErrorMessage(ctx.error.message || 'Authentication failed.');
         }
       });
     } catch (err) {
@@ -48,7 +75,6 @@ export default function LoginPage() {
     }
   };
 
-  // সোশ্যাল (গুগল/ফেসবুক) লগইন হ্যান্ডলার 🌟 (github টাইপ পরিবর্তন করে facebook করা হয়েছে)
   const handleSocialSignIn = async (provider: 'google' | 'facebook') => {
     try {
       await authClient.signIn.social({
@@ -74,7 +100,7 @@ export default function LoginPage() {
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800/80 rounded-2xl p-6 sm:p-8 shadow-xl shadow-slate-200/50 dark:shadow-none z-10"
       >
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <Link href="/" className="inline-block text-2xl font-black tracking-wider bg-clip-text text-transparent bg-gradient-to-r from-cyan-600 to-blue-600 dark:from-cyan-400 dark:to-blue-500 mb-2">
             GizmoGrid
           </Link>
@@ -84,6 +110,24 @@ export default function LoginPage() {
           </p>
         </div>
 
+        {/* ─────────────── ⚡ DEMO CREDENTIALS SHORTCUT BOX ─────────────── */}
+        <div className="mb-6 p-4 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl">
+          <div className="flex items-center gap-2 text-xs font-black text-slate-800 dark:text-slate-200 uppercase tracking-wider mb-2">
+            <FiTerminal className="text-cyan-500" size={14} /> Assignment Review Bypass
+          </div>
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3 leading-relaxed">
+            Click the button below to instantly populate fields and authorize access as a verified system Seller.
+          </p>
+          <button
+            type="button"
+            onClick={handleDemoLogin}
+            disabled={isLoading}
+            className="w-full flex items-center justify-center gap-2 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white dark:text-cyan-400 py-2 rounded-lg font-bold text-xs transition-all active:scale-[0.98] border border-slate-700 dark:border-slate-700 cursor-pointer disabled:opacity-50"
+          >
+            {isLoading ? <FiLoader size={12} className="animate-spin" /> : "⚡ One-Click Demo Login"}
+          </button>
+        </div>
+
         {/* এরর মেসেজ ডিসপ্লে */}
         {errorMessage && (
           <div className="mb-4 p-3 bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 rounded-xl text-xs font-semibold text-red-600 dark:text-red-400 text-center animate-shake">
@@ -91,7 +135,7 @@ export default function LoginPage() {
           </div>
         )}
 
-        {/* Social Authentication Buttons 🌟 */}
+        {/* Social Authentication Buttons */}
         <div className="grid grid-cols-2 gap-3 mb-6">
           <button 
             type="button"
@@ -102,7 +146,6 @@ export default function LoginPage() {
             Google
           </button>
           
-          {/* 🌟 এখানে ফেসবুক বাটনটি যুক্ত করা হয়েছে */}
           <button 
             type="button"
             onClick={() => handleSocialSignIn('facebook')}
@@ -147,23 +190,25 @@ export default function LoginPage() {
               </Link>
             </div>
             <div className="relative">
-              <FiLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
-              <input 
-                type={showPassword ? 'text' : 'password'} 
-                required
-                disabled={isLoading}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 rounded-xl py-3 pl-11 pr-11 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 disabled:opacity-60 transition-all font-medium"
-              />
-              <button 
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
-              >
-                {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
-              </button>
+              <div className="relative">
+                <FiLock size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+                <input 
+                  type={showPassword ? 'text' : 'password'} 
+                  required
+                  disabled={isLoading}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800/80 rounded-xl py-3 pl-11 pr-11 text-sm text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 focus:outline-none focus:border-cyan-500 dark:focus:border-cyan-400 disabled:opacity-60 transition-all font-medium"
+                />
+                <button 
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors cursor-pointer"
+                >
+                  {showPassword ? <FiEyeOff size={16} /> : <FiEye size={16} />}
+                </button>
+              </div>
             </div>
           </div>
 

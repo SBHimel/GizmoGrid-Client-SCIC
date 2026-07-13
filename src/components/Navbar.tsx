@@ -67,7 +67,7 @@ const handleLogout = async () => {
 
   const navItems = [
     { path: "/", label: "Home", icon: FiHome },
-    { path: "/explore", label: "Explore", icon: FiCompass },
+    { path: "/products", label: "Explore", icon: FiCompass },
     ...(session
       ? [
           { path: "/items/add", label: "Add Item", icon: FiPlusCircle },
