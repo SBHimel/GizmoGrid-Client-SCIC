@@ -5,6 +5,7 @@ import { getAllProducts } from "@/lib/api";
 import Image from "next/image";
 import Link from "next/link";
 import { toast } from "sonner";
+import { FiSearch, FiSliders, FiMaximize2, FiChevronLeft, FiChevronRight, FiRefreshCw } from "react-icons/fi";
 
 interface Product {
   _id: string;
@@ -29,7 +30,6 @@ export default function ExploreProductsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
-  // Load products whenever filters or page changes
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -41,7 +41,7 @@ export default function ExploreProductsPage() {
           maxPrice,
           sortBy,
           page: page.toString(),
-          limit: "8", // 8 items per page means 2 complete rows on desktop
+          limit: "8", 
         });
 
         const res = await getAllProducts(params.toString());
@@ -49,25 +49,23 @@ export default function ExploreProductsPage() {
           setProducts(res.data || []);
           setTotalPages(res.totalPages || 1);
         } else {
-          toast.error("Failed to load products.");
+          toast.error("Failed to sync inventory flow.");
         }
       } catch (error) {
         console.error(error);
-        toast.error("Something went wrong while fetching products.");
+        toast.error("Cybernetics link interrupted while fetching products.");
       } finally {
         setLoading(false);
       }
     };
 
-    // Debounce or immediate call setup
     const delayDebounceFn = setTimeout(() => {
       fetchData();
-    }, 400); // 400ms delay to avoid aggressive API calls while typing search
+    }, 400);
 
     return () => clearTimeout(delayDebounceFn);
   }, [search, category, minPrice, maxPrice, sortBy, page]);
 
-  // Reset page to 1 when any filter changes
   const handleFilterChange = (type: string, value: string) => {
     setPage(1);
     if (type === "category") setCategory(value);
@@ -76,185 +74,214 @@ export default function ExploreProductsPage() {
     if (type === "sortBy") setSortBy(value);
   };
 
+  const clearFilters = () => {
+    setSearch("");
+    setCategory("");
+    setMinPrice("");
+    setMaxPrice("");
+    setSortBy("");
+    setPage(1);
+  };
+
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white min-h-screen text-black">
-      {/* Page Heading */}
-      <h1 className="text-4xl font-black text-black mb-8 uppercase tracking-tight border-b-4 border-black pb-2">
-        Explore Products
-      </h1>
-
-      {/* 🔍 SEARCH AND FILTER CONTROL PANEL */}
-      <div className="bg-gray-100 p-4 rounded-lg border-2 border-gray-400 mb-8 space-y-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {/* Search Field */}
-          <div>
-            <label className="block text-xs font-black uppercase mb-1">Search Product</label>
-            <input
-              type="text"
-              placeholder="Type product name..."
-              value={search}
-              onChange={(e) => { setPage(1); setSearch(e.target.value); }}
-              className="w-full border-2 border-gray-400 p-2 text-black font-semibold rounded outline-none focus:border-black bg-white"
-            />
-          </div>
-
-          {/* Category Filter */}
-          <div>
-            <label className="block text-xs font-black uppercase mb-1">Category</label>
-            <select
-              value={category}
-              onChange={(e) => handleFilterChange("category", e.target.value)}
-              className="w-full border-2 border-gray-400 p-2 text-black font-semibold rounded outline-none focus:border-black bg-white"
-            >
-              <option value="">All Categories</option>
-              <option value="Electronics">Electronics</option>
-              <option value="Clothing">Clothing</option>
-              <option value="Gadgets">Gadgets</option>
-              <option value="Shoes">Shoes</option>
-            </select>
-          </div>
-
-          {/* Sorting Options */}
-          <div>
-            <label className="block text-xs font-black uppercase mb-1">Sort By Price</label>
-            <select
-              value={sortBy}
-              onChange={(e) => handleFilterChange("sortBy", e.target.value)}
-              className="w-full border-2 border-gray-400 p-2 text-black font-semibold rounded outline-none focus:border-black bg-white"
-            >
-              <option value="">Default (Latest)</option>
-              <option value="priceLow">Price: Low to High</option>
-              <option value="priceHigh">Price: High to Low</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Price Range Filter (Requirement: At least 2 fields filtering) */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 items-end">
-          <div>
-            <label className="block text-xs font-black uppercase mb-1">Min Price (৳)</label>
-            <input
-              type="number"
-              placeholder="0"
-              value={minPrice}
-              onChange={(e) => handleFilterChange("minPrice", e.target.value)}
-              className="w-full border-2 border-gray-400 p-2 text-black font-semibold rounded outline-none focus:border-black bg-white"
-            />
-          </div>
-          <div>
-            <label className="block text-xs font-black uppercase mb-1">Max Price (৳)</label>
-            <input
-              type="number"
-              placeholder="99999"
-              value={maxPrice}
-              onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
-              className="w-full border-2 border-gray-400 p-2 text-black font-semibold rounded outline-none focus:border-black bg-white"
-            />
-          </div>
-          <button
-            onClick={() => { setSearch(""); setCategory(""); setMinPrice(""); setMaxPrice(""); setSortBy(""); setPage(1); }}
-            className="col-span-2 md:col-span-2 w-full bg-black text-white font-black uppercase p-2.5 rounded hover:bg-gray-800 transition active:scale-95"
-          >
-            Clear All Filters
-          </button>
-        </div>
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-6 relative overflow-hidden pt-24 pb-16">
+      
+      {/* BACKGROUND NEO-GLOW ORBS */}
+      <div className="absolute inset-0 pointer-events-none -z-10 overflow-hidden">
+        <div className="absolute top-12 right-1/4 w-[400px] h-[400px] bg-cyan-500/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-10 left-1/4 w-[300px] h-[300px] bg-purple-500/5 rounded-full blur-[100px]" />
       </div>
 
-      {/* 📦 PRODUCTS GRID SECTION */}
-      {loading ? (
-        /* 💀 SKELETON LOADER (Requirement Rule) */
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {[...Array(8)].map((_, idx) => (
-            <div key={idx} className="border-2 border-gray-300 rounded-lg p-4 space-y-3 animate-pulse">
-              <div className="bg-gray-300 h-48 w-full rounded-md"></div>
-              <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-              <div className="h-3 bg-gray-300 rounded w-1/2"></div>
-              <div className="h-4 bg-gray-300 rounded w-1/4"></div>
-              <div className="h-9 bg-gray-300 rounded w-full"></div>
-            </div>
-          ))}
+      <div className="max-w-7xl mx-auto">
+        {/* Page Heading */}
+        <div className="mb-10">
+          <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500 inline-block border-b-4 border-cyan-500 pb-2">
+            Explore Products Matrix
+          </h1>
+          <p className="text-xs font-bold uppercase tracking-widest text-slate-500 mt-2">Filter and query premium catalog items live</p>
         </div>
-      ) : products.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-400 rounded-lg">
-          <p className="text-xl font-bold text-gray-600">No products found matching your criteria.</p>
-        </div>
-      ) : (
-        /* 🛍️ ACTUAL PRODUCT CARDS (Requirement: 4 cards per row on Desktop) */
-        <div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            {products.map((product) => (
-              <div
-                key={product._id}
-                className="flex flex-col border-2 border-black bg-white rounded-lg p-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] transition-all duration-200"
-              >
-                {/* Image Container */}
-                <div className="relative h-48 w-full mb-4 bg-gray-50 border border-gray-200 rounded-md overflow-hidden flex-shrink-0">
-                  <Image
-                    src={product.image}
-                    alt={product.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                
-                {/* Content Elements */}
-                <div className="flex flex-col flex-grow">
-                  <span className="text-xs font-black tracking-widest text-blue-600 uppercase mb-1">
-                    {product.category}
-                  </span>
-                  <h2 className="text-lg font-black text-black line-clamp-1 mb-2">
-                    {product.title}
-                  </h2>
-                  <p className="text-sm font-semibold text-gray-700 line-clamp-2 mb-4 flex-grow">
-                    {product.description || "No description provided for this specific product listing."}
-                  </p>
-                  
-                  {/* Meta Information */}
-                  <div className="flex justify-between items-center mb-4 pt-2 border-t border-gray-200">
-                    <span className="text-xl font-black text-black">৳{product.price}</span>
-                    <span className={`text-xs font-bold px-2 py-0.5 rounded border ${product.stock > 0 ? "bg-green-100 text-green-800 border-green-300" : "bg-red-100 text-red-800 border-red-300"}`}>
-                      {product.stock > 0 ? `${product.stock} In Stock` : "Out of Stock"}
-                    </span>
-                  </div>
 
-                  {/* View Details CTA Button */}
-                  <Link
-                    href={`/products/${product._id}`}
-                    className="w-full text-center bg-black text-white font-black uppercase py-2 rounded hover:bg-gray-800 transition active:scale-95 text-sm"
-                  >
-                    View Details
-                  </Link>
-                </div>
+        {/* 🔍 CONTROL MATRIX PANEL */}
+        <div className="bg-slate-900/60 backdrop-blur-md border border-slate-800/80 p-6 rounded-2xl shadow-xl mb-10 space-y-5">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Search Input */}
+            <div className="space-y-1.5">
+              <label className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wide text-slate-400">
+                <FiSearch size={12} className="text-cyan-400" /> Search Identifier
+              </label>
+              <input
+                type="text"
+                placeholder="Query items by name..."
+                value={search}
+                onChange={(e) => { setPage(1); setSearch(e.target.value); }}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-white placeholder-slate-600 focus:outline-none focus:border-cyan-500 transition-all font-medium"
+              />
+            </div>
+
+            {/* Category Option */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">Category Pipeline</label>
+              <select
+                value={category}
+                onChange={(e) => handleFilterChange("category", e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-slate-300 focus:outline-none focus:border-cyan-500 transition-all font-semibold"
+              >
+                <option value="">All Categories</option>
+                <option value="Electronics">Electronics</option>
+                <option value="Clothing">Clothing</option>
+                <option value="Gadgets">Gadgets</option>
+                <option value="Shoes">Shoes</option>
+              </select>
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">Sort Metric</label>
+              <select
+                value={sortBy}
+                onChange={(e) => handleFilterChange("sortBy", e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-slate-300 focus:outline-none focus:border-cyan-500 transition-all font-semibold"
+              >
+                <option value="">Default (Latest)</option>
+                <option value="priceLow">Price: Low to High</option>
+                <option value="priceHigh">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Price Range Filter & Reset Trigger */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-5 items-end pt-2 border-t border-slate-800/60">
+            <div className="space-y-1.5">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">Min Credits ($)</label>
+              <input
+                type="number"
+                placeholder="0"
+                value={minPrice}
+                onChange={(e) => handleFilterChange("minPrice", e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-cyan-500 transition-all font-medium"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <label className="text-xs font-black uppercase tracking-wide text-slate-400">Max Credits ($)</label>
+              <input
+                type="number"
+                placeholder="99999"
+                value={maxPrice}
+                onChange={(e) => handleFilterChange("maxPrice", e.target.value)}
+                className="w-full bg-slate-950 border border-slate-800 rounded-xl py-2.5 px-4 text-sm text-white placeholder-slate-700 focus:outline-none focus:border-cyan-500 transition-all font-medium"
+              />
+            </div>
+            
+            <button
+              onClick={clearFilters}
+              className="col-span-2 md:col-span-2 w-full flex items-center justify-center gap-2 border border-slate-700 hover:border-red-500/50 hover:bg-red-950/20 text-slate-300 hover:text-red-400 py-2.5 px-4 rounded-xl font-bold text-xs uppercase transition-all active:scale-[0.98] cursor-pointer"
+            >
+              <FiRefreshCw size={13} /> Clear Control Parameters
+            </button>
+          </div>
+        </div>
+
+        {/* 📦 PRODUCTS DATA STREAM GRID */}
+        {loading ? (
+          /* 💀 NEO SKELTON DISPLAY SYSTEM */
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {[...Array(8)].map((_, idx) => (
+              <div key={idx} className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-4 animate-pulse">
+                <div className="bg-slate-950 h-48 w-full rounded-xl border border-slate-800/60"></div>
+                <div className="h-4 bg-slate-800 rounded w-1/3"></div>
+                <div className="h-5 bg-slate-800 rounded w-3/4"></div>
+                <div className="h-3 bg-slate-800 rounded w-full"></div>
+                <div className="h-8 bg-slate-800 rounded w-full mt-4"></div>
               </div>
             ))}
           </div>
+        ) : products.length === 0 ? (
+          <div className="text-center py-20 border border-dashed border-slate-800 rounded-2xl bg-slate-900/30">
+            <p className="text-md font-bold text-slate-400">No active parameters match our current storage arrays.</p>
+            <p className="text-xs text-slate-600 mt-1">Try resetting or shifting your matrix parameters.</p>
+          </div>
+        ) : (
+          /* 🛍️ PREMIUM DARK CELL CARDS */
+          <div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+              {products.map((product) => (
+                <div
+                  key={product._id}
+                  className="group flex flex-col bg-slate-900/40 border border-slate-800/80 hover:border-cyan-500/40 rounded-2xl p-4 hover:shadow-2xl hover:shadow-cyan-500/5 transition-all duration-300"
+                >
+                  {/* Image Vault */}
+                  <div className="relative h-48 w-full mb-4 bg-slate-950 border border-slate-800/60 rounded-xl overflow-hidden flex-shrink-0">
+                    <Image
+                      src={product.image}
+                      alt={product.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  </div>
+                  
+                  {/* Info Hierarchy */}
+                  <div className="flex flex-col flex-grow">
+                    <span className="text-[10px] font-black tracking-widest text-cyan-400 bg-cyan-950/60 border border-cyan-900/50 px-2 py-0.5 rounded-full uppercase mb-2 self-start">
+                      {product.category}
+                    </span>
+                    <h2 className="text-md font-bold text-white group-hover:text-cyan-400 line-clamp-1 mb-1.5 transition-colors">
+                      {product.title}
+                    </h2>
+                    <p className="text-xs font-medium text-slate-400 line-clamp-2 mb-4 flex-grow leading-relaxed">
+                      {product.description || "No specific grid matrix metadata provided for this catalog index."}
+                    </p>
+                    
+                    {/* Meta Vault Indicators */}
+                    <div className="flex justify-between items-center mb-4 pt-3 border-t border-slate-800/60">
+                      <span className="text-lg font-black text-white">${product.price}</span>
+                      <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                        product.stock > 0 
+                          ? "bg-emerald-950/60 text-emerald-400 border-emerald-900/60" 
+                          : "bg-red-950/60 text-red-400 border-red-900/60"
+                      }`}>
+                        {product.stock > 0 ? `${product.stock} Units Available` : "Depleted"}
+                      </span>
+                    </div>
 
-          {/* 📄 PAGINATION LAYER (Requirement Rule) */}
-          {totalPages > 1 && (
-            <div className="flex justify-center items-center space-x-2 mt-12 pb-6">
-              <button
-                disabled={page === 1}
-                onClick={() => setPage((prev) => prev - 1)}
-                className="px-4 py-2 border-2 border-black font-bold uppercase rounded disabled:opacity-40 disabled:cursor-not-allowed bg-white text-black hover:bg-gray-100 transition"
-              >
-                Prev
-              </button>
-              
-              <span className="font-black text-lg px-4 text-black">
-                Page {page} of {totalPages}
-              </span>
-
-              <button
-                disabled={page === totalPages}
-                onClick={() => setPage((prev) => prev + 1)}
-                className="px-4 py-2 border-2 border-black font-bold uppercase rounded disabled:opacity-40 disabled:cursor-not-allowed bg-white text-black hover:bg-gray-100 transition"
-              >
-                Next
-              </button>
+                    {/* Action Execution Button */}
+                    <Link
+                      href={`/products/${product._id}`}
+                      className="w-full flex items-center justify-center gap-1 bg-slate-800 hover:bg-cyan-500 text-slate-200 hover:text-slate-950 font-black uppercase py-2.5 rounded-xl transition-all duration-200 text-xs tracking-wider active:scale-[0.97]"
+                    >
+                      Analyze Profile <FiMaximize2 size={12} />
+                    </Link>
+                  </div>
+                </div>
+              ))}
             </div>
-          )}
-        </div>
-      )}
+
+            {/* 📄 MATRIX LAYER PAGINATION */}
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center space-x-3 mt-14">
+                <button
+                  disabled={page === 1}
+                  onClick={() => setPage((prev) => prev - 1)}
+                  className="p-2.5 bg-slate-900 border border-slate-800 rounded-xl font-bold uppercase disabled:opacity-30 disabled:cursor-not-allowed hover:border-cyan-500/50 hover:text-cyan-400 transition-colors cursor-pointer"
+                >
+                  <FiChevronLeft size={16} />
+                </button>
+                
+                <span className="font-black text-xs uppercase tracking-widest px-4 text-slate-400">
+                  Sector <span className="text-white font-black">{page}</span> / {totalPages}
+                </span>
+
+                <button
+                  disabled={page === totalPages}
+                  onClick={() => setPage((prev) => prev + 1)}
+                  className="p-2.5 bg-slate-900 border border-slate-800 rounded-xl font-bold uppercase disabled:opacity-30 disabled:cursor-not-allowed hover:border-cyan-500/50 hover:text-cyan-400 transition-colors cursor-pointer"
+                >
+                  <FiChevronRight size={16} />
+                </button>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

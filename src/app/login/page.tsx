@@ -30,10 +30,20 @@ export default function LoginPage() {
       await authClient.signIn.email({
         email: demoEmail,
         password: demoPassword,
-        callbackURL: '/dashboard',
+        // 🌟 callbackURL রিমুভ করা হয়েছে যাতে ম্যানুয়ালি চেক করা যায়
       }, {
         onRequest: () => setIsLoading(true),
-        onSuccess: () => {
+        onSuccess: async (ctx) => {
+          console.log("SESSION USER:", ctx.data?.user);
+          // 🛡️ ইউজার সাসপেন্ডেড কিনা চেক করা
+          const sessionUser = ctx.data?.user as any;
+          if (sessionUser && sessionUser.status === 'suspended') {
+            await authClient.signOut(); // সেশন কুকি ডিলিট করা
+            setIsLoading(false);
+            setErrorMessage('Access Denied: Your account has been suspended by the administrator.');
+            return;
+          }
+
           setIsLoading(false);
           router.push('/dashboard');
         },
@@ -57,10 +67,20 @@ export default function LoginPage() {
       await authClient.signIn.email({
         email,
         password,
-        callbackURL: '/dashboard',
+        // 🌟 callbackURL রিমুভ করা হয়েছে
       }, {
         onRequest: () => setIsLoading(true),
-        onSuccess: () => {
+        onSuccess: async (ctx) => {
+          console.log("SESSION USER:", ctx.data?.user);
+          // 🛡️ মঙ্গোডিবি থেকে সেশনে আসা স্ট্যাটাস চেক
+          const sessionUser = ctx.data?.user as any;
+          if (sessionUser && sessionUser.status === 'suspended') {
+            await authClient.signOut(); // সেশন মুছে দেওয়া
+            setIsLoading(false);
+            setErrorMessage('Access Denied: Your account has been suspended by the administrator.');
+            return;
+          }
+
           setIsLoading(false);
           router.push('/dashboard');
         },

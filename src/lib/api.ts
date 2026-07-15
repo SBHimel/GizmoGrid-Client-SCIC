@@ -86,7 +86,7 @@ export const getSinglePro = async (productId: string) => {
     const { data: tokenData } = await authClient.token();
     const token = tokenData?.token;
 
-    const response = await fetch(`${BASE_URL}/api/products/${productId}`, {
+    const response = await fetch(`${BASE_URL}/api/products/${productId}/edit`, {
       method: "GET",
       headers: {
         authorization: `Bearer ${token || ""}`,
@@ -151,5 +151,110 @@ export const getSingleProduct = async (id: string) => {
   } catch (error) {
     console.error("API Call Error (getSingleProduct):", error);
     return { success: false, data: null, relatedProducts: [] };
+  }
+};
+
+
+// 👥 ১. সব ইউজারের লিস্ট গেট করার ফাংশন
+export const getAllUsers = async () => {
+  const { data: tokenData } = await authClient.token();
+
+  const response = await fetch(`${BASE_URL}/api/admin/users`, {
+    headers: {
+      Authorization: `Bearer ${tokenData?.token}`,
+    },
+  });
+
+  return await response.json();
+};
+
+// ⚡ ২. ইউজারের রোল আপডেট করার ফাংশন
+export const updateUserRoleInDB = async (
+  userId: string,
+  role: string
+) => {
+  const { data: tokenData } = await authClient.token();
+
+  const response = await fetch(
+    `${BASE_URL}/api/admin/users/${userId}/role`,
+    {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${tokenData?.token}`,
+      },
+      body: JSON.stringify({ role }),
+    }
+  );
+
+  return await response.json();
+};
+
+// তোমার ফ্রন্টএন্ডের api ফাইলে (যেখানে সব API ফাংশন থাকে)
+
+
+export const updateUserStatusInDB = async (
+  userId: string,
+  status: string
+) => {
+  try {
+    const { data } = await authClient.token();
+
+    const res = await fetch(`${BASE_URL}/api/admin/users/${userId}/status`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${data?.token}`,
+      },
+      body: JSON.stringify({ status }),
+    });
+
+    return await res.json();
+  } catch (error) {
+    console.error("API error updating status:", error);
+    return { success: false };
+  }
+};
+
+
+export const getAllProductsForAdmin = async () => {
+  try {
+    const { data: token } = await authClient.token();
+
+    const res = await fetch(`${BASE_URL}/api/admin/products`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token?.token}`,
+      },
+    });
+
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+    return { success: false };
+  }
+};
+
+
+export const deleteProductByAdmin = async (productId: string) => {
+  try {
+    const { data: token } = await authClient.token();
+
+    const res = await fetch(
+      `${BASE_URL}/api/admin/products/${productId}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token?.token}`,
+        },
+      }
+    );
+
+    return await res.json();
+  } catch (error) {
+    console.error("Failed to delete product:", error);
+    return { success: false };
   }
 };

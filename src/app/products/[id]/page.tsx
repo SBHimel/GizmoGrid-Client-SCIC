@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { getSinglePro } from "@/lib/api";
-import Image from "next/image";
-import Link from "next/link";
 import { toast } from "sonner";
+import Link from "next/link";
+import { FiLoader, FiArrowLeft, FiShoppingCart, FiCpu, FiCheckCircle, FiXCircle } from "react-icons/fi";
 
 interface Product {
   _id: string;
@@ -49,106 +49,156 @@ export default function ProductDetailsPage() {
 
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto p-6 min-h-screen flex items-center justify-center bg-white text-black">
-        <p className="text-xl font-black uppercase animate-pulse">Loading Product Data Matrix...</p>
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-100">
+        <FiLoader className="animate-spin text-cyan-500 text-4xl mb-4" />
+        <p className="text-xs font-bold tracking-widest uppercase animate-pulse">
+          Decrypting Asset Matrix Data...
+        </p>
       </div>
     );
   }
 
   if (!product) {
     return (
-      <div className="max-w-7xl mx-auto p-6 min-h-screen flex flex-col items-center justify-center bg-white text-black">
-        <p className="text-2xl font-black text-red-600 uppercase mb-4">404 - Product Not Found</p>
-        <Link href="/products" className="border-2 border-black px-6 py-2 font-bold uppercase hover:bg-black hover:text-white transition">
-          Back to Explore
+      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center text-slate-100 p-6">
+        <p className="text-2xl font-black text-rose-500 uppercase tracking-widest mb-4">
+          [ 404 - Node Dissolved ]
+        </p>
+        <p className="text-sm text-slate-400 mb-6 uppercase tracking-wider">The requested product does not exist in the Grid.</p>
+        <Link href="/products" className="flex items-center gap-2 bg-slate-900 hover:bg-slate-800 border border-slate-800 text-cyan-400 font-bold uppercase px-6 py-3 rounded-xl text-xs transition-all">
+          <FiArrowLeft /> Return to Grid Explore
         </Link>
       </div>
     );
   }
 
   return (
-    <div className="max-w-7xl mx-auto p-6 bg-white min-h-screen text-black">
-      {/* Breadcrumb / Back Link */}
-      <Link href="/products" className="inline-block text-sm font-black uppercase mb-6 hover:underline">
-        ← Back to all products
-      </Link>
+    <div className="min-h-screen bg-slate-950 text-slate-100 p-4 sm:p-6 md:p-10 relative overflow-hidden">
+      {/* 🔮 Background Glow Orbs */}
+      <div className="absolute -top-40 -right-40 w-96 h-96 bg-cyan-600/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-80 h-80 bg-teal-600/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* 🛍️ MAIN PRODUCT DETAILS SECTION */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 border-4 border-black p-6 md:p-8 rounded-2xl shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] mb-16">
-        {/* Left Side: Product Image */}
-        <div className="relative h-96 w-full border-2 border-black bg-gray-50 rounded-xl overflow-hidden">
-          <Image
-            src={product.image}
-            alt={product.title}
-            fill
-            className="object-cover"
-            priority
-          />
-        </div>
+      <div className="max-w-7xl mx-auto">
+        {/* Navigation Breadcrumb */}
+        <Link 
+          href="/products" 
+          className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-slate-500 hover:text-cyan-400 mb-8 group transition-colors"
+        >
+          <FiArrowLeft className="group-hover:-translate-x-1 transition-transform" /> Return to Assets Directory
+        </Link>
 
-        {/* Right Side: Product Details */}
-        <div className="flex flex-col justify-between">
-          <div>
-            <span className="inline-block text-xs font-black tracking-widest text-blue-600 uppercase bg-blue-50 border border-blue-300 px-3 py-1 rounded-full mb-4">
-              {product.category}
-            </span>
-            <h1 className="text-3xl md:text-4xl font-black uppercase tracking-tight text-black mb-4">
-              {product.title}
-            </h1>
-            <p className="text-2xl font-black text-black mb-6">৳{product.price}</p>
-            
-            <div className="border-t-2 border-b-2 border-gray-200 py-4 mb-6">
-              <h3 className="text-xs font-black uppercase text-gray-500 mb-2">Description</h3>
-              <p className="text-base font-medium text-gray-800 leading-relaxed">
-                {product.description || "No description provided for this specific premium listing."}
-              </p>
-            </div>
+        {/* 🛍️ MAIN PRODUCT DETAILS INTERFACE */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 bg-slate-900/20 border border-slate-800/80 rounded-3xl p-6 md:p-8 backdrop-blur-xl shadow-2xl mb-16 relative">
+          
+          {/* Left Block: Graphic Visual Vault */}
+          <div className="relative h-[300px] sm:h-[400px] w-full bg-slate-950 border border-slate-800 rounded-2xl overflow-hidden group">
+            <img
+              src={product.image || "https://placehold.co/600x400"}
+              alt={product.title}
+              className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-105"
+              onError={(e) => {
+                (e.target as HTMLImageElement).src = "https://placehold.co/600x400";
+              }}
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
           </div>
 
-          {/* Call to Action Controls */}
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <span className="text-sm font-black uppercase">Availability:</span>
-              <span className={`text-xs font-black px-3 py-1 rounded border ${product.stock > 0 ? "bg-green-100 text-green-800 border-green-400" : "bg-red-100 text-red-800 border-red-400"}`}>
-                {product.stock > 0 ? `${product.stock} ITEMS IN STOCK` : "OUT OF STOCK"}
+          {/* Right Block: Telemetry Info Specifications */}
+          <div className="flex flex-col justify-between space-y-6">
+            <div>
+              {/* Category Tag Badge */}
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md text-[10px] font-black uppercase tracking-wider bg-slate-950 text-teal-400 border border-teal-500/20 mb-4">
+                <FiCpu size={12} /> {product.category}
               </span>
+              
+              {/* Main Headline Title */}
+              <h1 className="text-2xl sm:text-4xl font-black uppercase tracking-tight text-white mb-3">
+                {product.title}
+              </h1>
+              
+              {/* Credits / Price Node */}
+              <p className="text-3xl font-mono font-black text-cyan-400 tracking-tight mb-6">
+                ৳{product.price.toLocaleString()}
+              </p>
+              
+              {/* Asset Description Log */}
+              <div className="border-t border-b border-slate-800/80 py-5 mb-6">
+                <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 mb-2">Description Matrix</h3>
+                <p className="text-sm font-medium text-slate-400 leading-relaxed">
+                  {product.description || "No customized configuration log provided for this specific item core."}
+                </p>
+              </div>
             </div>
-            
-            <button 
-              disabled={product.stock <= 0}
-              className="w-full bg-black text-white font-black uppercase py-4 rounded-xl text-md hover:bg-gray-800 transition active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed shadow-[4px_4px_0px_0px_rgba(0,0,0,0.2)]"
-            >
-              Add To Cart / Purchase
-            </button>
+
+            {/* Tactical Control Console */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-[10px] font-black uppercase tracking-widest text-slate-500">Node Status:</span>
+                {product.stock > 0 ? (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-md uppercase">
+                    <FiCheckCircle size={12} /> {product.stock} Units Operational
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2.5 py-0.5 rounded-md uppercase">
+                    <FiXCircle size={12} /> Matrix Depleted
+                  </span>
+                )}
+              </div>
+              
+              <button 
+                disabled={product.stock <= 0}
+                className="w-full bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white font-black uppercase py-4 rounded-xl text-xs tracking-widest transition-all active:scale-[0.98] disabled:opacity-30 disabled:cursor-not-allowed shadow-lg shadow-cyan-600/10 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <FiShoppingCart size={16} /> Execute Allocation Protocol / Purchase
+              </button>
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* 🔄 RELATED ITEMS LAYER (Requirement Module) */}
-      <div className="border-t-4 border-black pt-12">
-        <h2 className="text-2xl font-black uppercase text-black mb-8 tracking-tight">
-          Related Items ({product.category})
-        </h2>
-
-        {related.length === 0 ? (
-          <p className="text-sm font-semibold text-gray-500 italic">No similar items found in this category.</p>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-            {related.map((item) => (
-              <Link
-                key={item._id}
-                href={`/products/${item._id}`}
-                className="flex flex-col border-2 border-black p-4 rounded-xl shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:scale-[1.02] transition-all bg-white"
-              >
-                <div className="relative h-40 w-full bg-gray-50 rounded-md overflow-hidden mb-3">
-                  <Image src={item.image} alt={item.title} fill className="object-cover" />
-                </div>
-                <h3 className="text-sm font-black text-black line-clamp-1 mb-1 uppercase">{item.title}</h3>
-                <p className="text-sm font-black text-gray-700 mt-auto">৳{item.price}</p>
-              </Link>
-            ))}
+        {/* 🔄 RELATED ITEMS SUBSYSTEM */}
+        <div className="border-t border-slate-800/80 pt-12">
+          <div className="mb-8">
+            <h2 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-white">
+              Related Core Modules
+            </h2>
+            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest mt-1">
+              Synchronized data entities from the {product.category} sector
+            </p>
           </div>
-        )}
+
+          {related.length === 0 ? (
+            <div className="p-8 border border-dashed border-slate-800 rounded-2xl text-center">
+              <p className="text-xs font-bold uppercase tracking-widest text-slate-600">No parallel data entries found in this vector.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+              {related.map((item) => (
+                <Link
+                  key={item._id}
+                  href={`/products/${item._id}`}
+                  className="group flex flex-col bg-slate-900/20 border border-slate-800/80 p-4 rounded-2xl hover:border-cyan-500/40 shadow-xl transition-all"
+                >
+                  <div className="relative h-40 w-full bg-slate-950 border border-slate-900 rounded-xl overflow-hidden mb-4">
+                    <img 
+                      src={item.image || "https://placehold.co/300"} 
+                      alt={item.title} 
+                      className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "https://placehold.co/300";
+                      }}
+                    />
+                  </div>
+                  <h3 className="text-xs font-bold text-slate-200 line-clamp-1 mb-1 uppercase tracking-wide group-hover:text-cyan-400 transition-colors">
+                    {item.title}
+                  </h3>
+                  <p className="text-sm font-mono font-black text-cyan-400 mt-auto pt-2 border-t border-slate-800/50">
+                    ৳{item.price.toLocaleString()}
+                  </p>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
