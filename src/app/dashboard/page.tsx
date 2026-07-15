@@ -42,7 +42,8 @@ export default function DashboardPage() {
     return (
       <div className="flex flex-col items-center justify-center min-h-[50vh] text-center p-6">
         <h2 className="text-xl font-bold text-slate-800 dark:text-white mb-2">Access Denied 🔒</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">ড্যাশবোর্ড দেখতে হলে আপনাকে প্রথমে লগইন করতে হবে।</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
+To view the dashboard, you must first log in.</p>
         <Link href="/login" className="px-5 py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded-xl text-sm transition shadow-sm">
           Go to Login
         </Link>
@@ -56,7 +57,7 @@ export default function DashboardPage() {
       {/* 🔹 ওয়েলকাম ব্যানার */}
       <div className="bg-gradient-to-r from-slate-800 to-slate-950 p-8 rounded-2xl text-white shadow-md">
         <h1 className="text-3xl font-bold mb-2">Welcome back, {session?.user?.name || 'Buyer'}! 👋</h1>
-        <p className="text-slate-300">GizmoGrid ড্যাশবোর্ডে আপনাকে স্বাগতম। আপনার পছন্দের লেটেস্ট গেজেট ও অর্ডারের আপডেট এখান থেকে ট্র্যাক করুন।</p>
+        <p className="text-slate-300">Welcome to the GizmoGrid dashboard. Track the latest updates on your favorite gadgets and orders from here.</p>
       </div>
 
       {/* 🔹 কুইক স্ট্যাটাস কার্ডস (বায়ারের ডামি ডাটা) */}
@@ -69,8 +70,8 @@ export default function DashboardPage() {
               <FiShoppingBag />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">৩</h3>
-          <p className="text-xs text-slate-400 mt-1">সব মিলিয়ে এ পর্যন্ত করা মোট অর্ডার</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">3</h3>
+          <p className="text-xs text-slate-400 mt-1">Total orders placed so far</p>
         </div>
 
         {/* কার্ড ২: পেন্ডিং অর্ডার */}
@@ -81,8 +82,9 @@ export default function DashboardPage() {
               <FiClock />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">১</h3>
-          <p className="text-xs text-slate-400 mt-1">যে অর্ডারগুলো এখনো প্রসেসিংয়ে আছে</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">1</h3>
+          <p className="text-xs text-slate-400 mt-1">
+Orders that are still being processed</p>
         </div>
 
         {/* কার্ড ৩: উইশলিস্ট আইটেম */}
@@ -93,8 +95,8 @@ export default function DashboardPage() {
               <FiHeart />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">৫</h3>
-          <p className="text-xs text-slate-400 mt-1">আপনার পছন্দের তালিকায় জমা থাকা প্রোডাক্ট</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">5</h3>
+          <p className="text-xs text-slate-400 mt-1">Products added to your wishlist</p>
         </div>
       </div>
 

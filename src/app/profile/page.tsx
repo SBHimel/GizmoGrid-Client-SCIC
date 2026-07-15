@@ -82,7 +82,7 @@ export default function ProfileUpdatePage() {
     }
   };
 
-  const userRole = session?.user?.role || 'buyer';
+  const userRole = (session?.user as { role?: string })?.role ?? "buyer";
   const dashboardLink = userRole === 'buyer' ? '/dashboard' : `/dashboard/${userRole}`;
 
   return (

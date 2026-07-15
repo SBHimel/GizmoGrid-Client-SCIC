@@ -258,3 +258,67 @@ export const deleteProductByAdmin = async (productId: string) => {
     return { success: false };
   }
 };
+
+
+
+// 🎯 ১. নতুন আইটেম যুক্ত করার ফাংশন (POST /api/items)
+export const addItemToServer = async (itemData: any) => {
+  const { data: token } = await authClient.token();
+  
+  const response = await fetch(`${BASE_URL}/api/items`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token?.token}`,
+    },
+    body: JSON.stringify(itemData),
+  });
+
+  return await response.json();
+};
+
+// 🎯 ২. নির্দিষ্ট সেলারের নিজের আইটেমগুলো গেট করার ফাংশন (GET /api/items/my-items)
+export const getMyItemsFromServer = async (email: string) => {
+  const { data: token } = await authClient.token();
+
+  const response = await fetch(`${BASE_URL}/api/items/my-items?email=${email}`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token?.token}`,
+    },
+  });
+
+  return await response.json();
+};
+
+// 🎯 ৩. আইডি দিয়ে আইটেম ডিলিট করার ফাংশন (DELETE /api/items/:id)
+export const deleteItemFromServer = async (id: string) => {
+  const { data: token } = await authClient.token();
+
+  const response = await fetch(`${BASE_URL}/api/items/${id}`, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      authorization: `Bearer ${token?.token}`,
+    },
+  });
+
+  return await response.json();
+};
+
+
+// src/lib/api.ts
+
+
+export const fetchAboutStats = async () => {
+  const response = await fetch(`${BASE_URL}/api/stats/dashboard`, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch stats");
+  return await response.json();
+};
