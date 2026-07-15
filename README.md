@@ -1,7 +1,7 @@
 # 🛒 GizmoGrid | Next-Gen Tech Gadgets Marketplace
 
 <p align="center">
-  <img src="YOUR_SCREENSHOT_IMAGE_URL_HERE" alt="GizmoGrid App Screenshot" width="100%" style="border-radius: 10px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);" />
+  <img src="./public/screenshot.png" alt="GizmoGrid App Screenshot" width="100%" style="border-radius: 10px; box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);" />
 </p>
 
 Welcome to **GizmoGrid**, a cutting-edge, highly secure, and feature-rich full-stack technology and smart devices marketplace. Built on the modern **Next.js 16 (App Router)** architecture, GizmoGrid bridges the gap between tech enthusiasts, buyers, and sellers with an immersive, dark-themed, ultra-fast interface and robust multi-role authentication.
