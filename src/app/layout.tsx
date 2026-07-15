@@ -12,8 +12,14 @@ const geistSans = Geist({
 
 export const metadata: Metadata = {
   title: "GizmoGrid | Next-Gen Tech Gadgets Marketplace",
-  description:
-    "Explore, add, and manage cutting-edge technology and smart devices.",
+  description: "Explore, add, and manage cutting-edge technology and smart devices.",
+  icons: {
+    icon: [
+      {
+        url: "/metadataimg.png",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({

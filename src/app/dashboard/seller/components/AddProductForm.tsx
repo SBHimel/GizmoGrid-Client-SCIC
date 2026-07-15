@@ -92,7 +92,7 @@ export default function AddProductForm({ token }: AddProductFormProps) {
           <FiPlusCircle className="text-cyan-600" /> Add New Product
         </h1>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          আপনার দোকানের নতুন গেজেট বা প্রোডাক্টটি ডাটাবেজে যুক্ত করতে নিচের ফর্মটি পূরণ করুন।
+          Fill out the form below to add your store's new gazette or product to the database.
         </p>
       </div>
 
@@ -193,7 +193,7 @@ export default function AddProductForm({ token }: AddProductFormProps) {
             />
           </div>
           <p className="text-[11px] text-slate-400 mt-1.5">
-            আপনার কম্পিউটার বা ফোন থেকে পরিষ্কার একটি জেপিসি/পিএনজি ছবি আপলোড করুন।
+            Upload a clear JPEG/PNG image from your computer or phone.
           </p>
         </div>
 

@@ -10,7 +10,7 @@ export default function SellerDashboardHome() {
       {/* 🔹 ওয়েলকাম ব্যানার */}
       <div className="bg-gradient-to-r from-cyan-900 to-slate-950 p-8 rounded-2xl text-white shadow-md">
         <h1 className="text-3xl font-bold mb-2">Welcome Seller Panel! 🚀</h1>
-        <p className="text-cyan-200/80">GizmoGrid-এ আপনার দোকান ও গেজেটসমূহ এখান থেকে ম্যানেজ করুন। নতুন প্রোডাক্ট যোগ করুন এবং সেলস ট্র্যাক করুন।</p>
+        <p className="text-cyan-200/80">Manage your store from widgets on GizmoGrid. Add new products and track sales.</p>
       </div>
 
       {/* 🔹 সেলার স্ট্যাটাস কার্ডস */}
@@ -23,8 +23,8 @@ export default function SellerDashboardHome() {
               <FiDollarSign />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">৳০.০০</h3>
-          <p className="text-xs text-slate-400 mt-1">আপনার সফলভাবে বিক্রি হওয়া প্রোডাক্টের মোট আয়</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">$0.00</h3>
+          <p className="text-xs text-slate-400 mt-1">Total revenue from your successfully sold products</p>
         </div>
 
         {/* কার্ড ২: মোট প্রোডাক্ট */}
@@ -35,8 +35,8 @@ export default function SellerDashboardHome() {
               <FiBox />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">০</h3>
-          <p className="text-xs text-slate-400 mt-1">আপনার দোকানে আপলোড করা মোট গেজেট সংখ্যা</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">0</h3>
+          <p className="text-xs text-slate-400 mt-1">Total number of gazettes uploaded to your store</p>
         </div>
 
         {/* কার্ড ৩: মোট অর্ডার রিকোয়েস্ট */}
@@ -47,8 +47,8 @@ export default function SellerDashboardHome() {
               <FiShoppingBag />
             </span>
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">০</h3>
-          <p className="text-xs text-slate-400 mt-1">কাস্টমাররা আপনার প্রোডাক্টের জন্য যতগুলো অর্ডার করেছে</p>
+          <h3 className="text-2xl font-bold text-slate-800 dark:text-white">0</h3>
+          <p className="text-xs text-slate-400 mt-1">The number of orders customers have placed for your product.</p>
         </div>
       </div>
 

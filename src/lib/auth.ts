@@ -28,7 +28,7 @@ export const auth = betterAuth({
     facebook: {
       clientId: process.env.FACEBOOK_CLIENT_ID!,
       clientSecret: process.env.FACEBOOK_CLIENT_SECRET!,
-      scopes: ["public_profile"], // 👈 এখানে শুধু public_profile রাখো, email কেটে দাও
+      
     },
   },
   user: {

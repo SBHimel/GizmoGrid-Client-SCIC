@@ -6,6 +6,7 @@ import { FiLoader, FiGrid, FiShoppingBag, FiClock, FiHeart, FiUser } from 'react
 import Link from 'next/link';
 // 🎯 তোমার প্রজেক্টের Better Auth ক্লায়েন্ট পাথ অনুযায়ী ইম্পোর্ট করো
 import { authClient } from '@/lib/auth-client'; 
+import { AuthUser } from '@/lib/auth';
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -14,7 +15,7 @@ export default function DashboardPage() {
   const { data: session, isPending } = authClient.useSession();
 
   // 🎯 ইউজারের রোল বের করা
-  const userRole = session?.user?.role || 'buyer';
+  const userRole = (session?.user as AuthUser & { role?: string })?.role || "buyer";
 
   // 🔄 রোল অনুযায়ী সঠিক ড্যাশবোর্ডে অটোমেটিক পাঠিয়ে দেওয়ার লজিক (সেলার এবং এডমিনের জন্য)
   useEffect(() => {

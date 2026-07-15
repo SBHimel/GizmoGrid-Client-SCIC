@@ -40,31 +40,30 @@ export default function Navbar() {
   }, []);
 
 const handleLogout = async () => {
-    setIsLoggingOut(true);
-    setMobileMenuOpen(false);
+  setIsLoggingOut(true);
+  setMobileMenuOpen(false);
 
-    // Sonner-এর লোডিং ও প্রমিজ হ্যান্ডলার ব্যবহার করলাম
-    toast.promise(
-      authClient.signOut({
-        onSuccess: () => {
-          setIsLoggingOut(false);
-          // Better Auth কুকি রিলিজ করার জন্য ১ সেকেন্ড টাইম দিয়ে ফোর্স রিডাইরেক্ট
-          setTimeout(() => {
-            window.location.href = '/login';
-          }, 1000);
-        },
-        onError: (ctx) => {
-          setIsLoggingOut(false);
-          throw new Error(ctx.error.message || 'Logout failed.');
-        }
-      }),
+  try {
+    await toast.promise(
+      authClient.signOut(),
       {
-        loading: 'Disconnecting from GizmoGrid matrix...',
-        success: 'Logged out successfully! Redirecting...',
-        error: (err) => err.message || 'Could not terminate session.',
+        loading: "Disconnecting from GizmoGrid matrix...",
+        success: "Logged out successfully! Redirecting...",
+        error: "Could not terminate session.",
       }
     );
-  };
+
+    setIsLoggingOut(false);
+
+    setTimeout(() => {
+      window.location.href = "/login";
+    }, 1000);
+
+  } catch (error) {
+    console.error(error);
+    setIsLoggingOut(false);
+  }
+};
 
   // Navbar কম্পোনেন্টের ভেতরে navItems অ্যারেটি এভাবে আপডেট করো:
 

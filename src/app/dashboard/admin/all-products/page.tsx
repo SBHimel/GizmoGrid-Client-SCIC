@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { FiLoader, FiSearch, FiFilter, FiRefreshCw, FiTrash2, FiCpu, FiAlertTriangle } from "react-icons/fi";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { toast } from "sonner";
 import { getAllProductsForAdmin, deleteProductByAdmin } from "@/lib/api";
 
@@ -82,18 +82,33 @@ export default function AllProductsPage() {
   }
 
   // Framer Motion Animation Variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.05 }
-    }
-  };
+  const containerVariants: Variants = {
+  hidden: {
+    opacity: 0,
+  },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.05,
+    },
+  },
+};
 
-  const itemVariants = {
-    hidden: { opacity: 0, y: 15 },
-    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 260, damping: 20 } }
-  };
+const itemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 15,
+  },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      type: "spring",
+      stiffness: 260,
+      damping: 20,
+    },
+  },
+};
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-4 sm:p-6 md:p-10 relative overflow-hidden">
@@ -203,7 +218,7 @@ export default function AllProductsPage() {
                           {prod.title}
                         </h3>
                         <p className="text-xs font-mono font-bold text-cyan-400 mt-1">
-                          ৳{prod.price.toLocaleString()}
+                          ${prod.price.toLocaleString()}
                         </p>
                       </div>
                     </div>
@@ -289,7 +304,7 @@ export default function AllProductsPage() {
                         </td>
                         {/* Price */}
                         <td className="p-4 font-mono font-bold text-cyan-400">
-                          ৳{prod.price.toLocaleString()}
+                          ${prod.price.toLocaleString()}
                         </td>
                         {/* Seller */}
                         <td className="p-4 text-xs font-medium text-slate-400">

@@ -50,7 +50,9 @@ export default function AddItemPage() {
   }
 
   // 🔒 ৪. রোল পারমিশন চেক (ইউজার যদি শুধুই Buyer হয়)
-  const isAuthorized = ["seller", "manager", "admin"].includes(session.user.role || "");
+ const isAuthorized = ["seller", "manager", "admin"].includes(
+  (session.user as { role?: string }).role || ""
+);
   
   if (!isAuthorized) {
     return (

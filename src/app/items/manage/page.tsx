@@ -39,7 +39,9 @@ export default function ManageItemsPage() {
     return null;
   }
 
-  const isAuthorized = ["seller", "manager", "admin"].includes(session.user.role || "");
+  const isAuthorized = ["seller", "manager", "admin"].includes(
+  (session.user as { role?: string }).role || ""
+);
   if (!isAuthorized) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center p-6">

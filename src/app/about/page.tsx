@@ -13,33 +13,33 @@ import TimelineSection from "./components/TimelineSection";
 import FAQSection from "./components/FAQSection";
 
 export default function AboutPage() {
-interface AboutData {
-  stats: {
-    totalUsers: number;
-    totalProducts: number;
-    totalSellers: number;
-    pendingProducts: number;
-  };
+  interface AboutData {
+    stats: {
+      totalUsers: number;
+      totalProducts: number;
+      totalSellers: number;
+      pendingProducts: number;
+    };
 
-  userDistribution: {
-    name: string;
-    value: number;
-    fill: string;
-  }[];
+    userDistribution: {
+      name: string;
+      value: number;
+      fill: string;
+    }[];
 
-  productStatus: {
-    name: string;
-    value: number;
-  }[];
+    productStatus: {
+      name: string;
+      value: number;
+    }[];
 
-  growthData: {
-    month: string;
-    Users: number;
-    Products: number;
-  }[];
-}
+    growthData: {
+      month: string;
+      Users: number;
+      Products: number;
+    }[];
+  }
 
-const [data, setData] = useState<AboutData | null>(null);
+  const [data, setData] = useState<AboutData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -69,11 +69,20 @@ const [data, setData] = useState<AboutData | null>(null);
       <HeroSection />
       <div className="max-w-6xl mx-auto px-4 py-12 space-y-24">
         {/* ডাটাগুলো প্রপস হিসেবে কম্পোনেন্টে পাস করছি */}
-        <StatsSection stats={data?.stats} />
-        <ChartsDashboard 
-          userDistribution={data?.userDistribution} 
-          productStatus={data?.productStatus} 
-          growthData={data?.growthData} 
+        <StatsSection
+          stats={
+            data?.stats ?? {
+              totalUsers: 0,
+              totalProducts: 0,
+              totalSellers: 0,
+              pendingProducts: 0,
+            }
+          }
+        />
+        <ChartsDashboard
+          userDistribution={data?.userDistribution ?? []}
+          productStatus={data?.productStatus ?? []}
+          growthData={data?.growthData ?? []}
         />
         <TechStack />
         <TimelineSection />

@@ -10,6 +10,7 @@ import {
   FiHome, FiLoader, FiMenu, FiX 
 } from 'react-icons/fi';
 import { authClient } from '@/lib/auth-client'; 
+import { AuthUser } from '@/lib/auth';
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -63,7 +64,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     );
   }
 
-  const userRole = session?.user?.role || 'buyer';
+const userRole = (session?.user as AuthUser & { role?: string })?.role || "buyer";
 
   let currentLinks = buyerLinks; 
   if (userRole === 'seller') currentLinks = sellerLinks;

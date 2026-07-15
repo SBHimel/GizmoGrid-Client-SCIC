@@ -79,7 +79,7 @@ export default function MyProductsPage() {
       {products.length === 0 ? (
         <div className="bg-white rounded-lg shadow p-12 text-center border border-gray-100">
           <p className="text-gray-500 mb-4 text-lg">
-            আপনি এখনো কোনো প্রোডাক্ট যোগ করেননি।
+            You have not added any products yet.
           </p>
         </div>
       ) : (

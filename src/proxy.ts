@@ -35,5 +35,5 @@ export async function proxy(request: Request) {
 }
 
 export const config = {
-  matcher: ['/profile',"/dashboard/:path*"],
+  matcher: ["/items/add","/items/manage",'/profile',"/dashboard/:path*"],
 };

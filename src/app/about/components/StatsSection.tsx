@@ -12,7 +12,7 @@ interface Stats {
 export default function StatsSection({
   stats,
 }: {
-  stats: Stats;
+  stats?: Stats;
 }) {
   // প্রপস থেকে ডেটা রিসিভ করছি, না থাকলে ডিফল্ট 0 দিচ্ছি
   const data = [
