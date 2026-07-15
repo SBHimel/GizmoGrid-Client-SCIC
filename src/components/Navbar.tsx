@@ -17,6 +17,7 @@ import {
   FiCompass,
   FiHome,
   FiLoader,
+  FiInfo,
 } from "react-icons/fi";
 import { useSession, authClient } from "@/lib/auth-client";
 // নতুন তৈরি করা প্রোফাইল কম্পোনেন্ট ইম্পোর্ট
@@ -65,16 +66,19 @@ const handleLogout = async () => {
     );
   };
 
-  const navItems = [
-    { path: "/", label: "Home", icon: FiHome },
-    { path: "/products", label: "Explore", icon: FiCompass },
-    ...(session
-      ? [
-          { path: "/items/add", label: "Add Item", icon: FiPlusCircle },
-          { path: "/items/manage", label: "Manage", icon: FiGrid },
-        ]
-      : []),
-  ];
+  // Navbar কম্পোনেন্টের ভেতরে navItems অ্যারেটি এভাবে আপডেট করো:
+
+const navItems = [
+  { path: "/", label: "Home", icon: FiHome },
+  { path: "/products", label: "Explore", icon: FiCompass },
+  { path: "/about", label: "About", icon: FiInfo }, // নতুন লাইন যোগ করা হয়েছে
+  ...(session
+    ? [
+        { path: "/items/add", label: "Add Item", icon: FiPlusCircle },
+        { path: "/items/manage", label: "Manage", icon: FiGrid },
+      ]
+    : []),
+];
 
   return (
     <div className="fixed top-4 left-0 w-full z-50 px-4 md:px-8">
